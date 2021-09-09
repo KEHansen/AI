@@ -1,10 +1,15 @@
 package lektion2;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Maze {
 
+    static Scanner in = new Scanner(System.in);
+
     static Point start;
+
+    static ArrayList<Point> route = new ArrayList<>();
 
     static String[][] maze = {  {"¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤"},
                                 {"¤"," ","¤"," ","¤"," ","¤"," "," "," "," "," ","¤"},
@@ -16,6 +21,15 @@ public class Maze {
                                 {"¤"," ","¤"," ","¤","¤","¤"," ","¤"," ","¤"," ","¤"},
                                 {"¤"," "," "," "," "," "," "," "," "," ","¤","G","¤"},
                                 {"¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤"}};
+
+    static void printmatrix(String[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
 
     static boolean findS(String[][] maze) {
         for (int i = 0; i < maze.length; i++) {
@@ -30,20 +44,59 @@ public class Maze {
     }
 
     static boolean solve(Point pos) {
-        if (maze[pos.x][pos.y].equals("G"))
+        //String n = in.nextLine();
+        printmatrix(maze);
+        int x = pos.getX();
+        int y = pos.getY();
+        Point temp = new Point(x,y);
+        System.out.println();
+        if (maze[x][y].equals("G"))
             return true;
-        if (maze[pos.x+1][pos.y].equals(" ") || maze[pos.x+1][pos.y].equals("G"))
-
+        if (!(maze[x][y].equals("S"))) {
+            maze[x][y] = "v";
+        }
+        if (maze[x][y+1].equals(" ") || maze[x][y+1].equals("G")) {
+            pos.setY(y + 1);
+            route.add(temp);
+            if (solve(pos))
+                return true;
+        } else if (maze[x+1][y].equals(" ") || maze[x+1][y].equals("G")) {
+            pos.setX(x + 1);
+            route.add(temp);
+            if (solve(pos))
+                return true;
+        } else if (maze[x][y-1].equals(" ") || maze[x][y-1].equals("G")) {
+            pos.setY(y - 1);
+            route.add(temp);
+            if (solve(pos))
+                return true;
+        } else if (maze[x-1][y].equals(" ") || maze[x-1][y].equals("G")) {
+            pos.setX(x - 1);
+            route.add(temp);
+            if (solve(pos))
+                return true;
+        } else if (!(maze[x][y].equals("S"))) {
+            maze[x][y] = "x";
+            route.remove(route.size()-1);
+            if (solve(route.get(route.size()-1)))
+                return true;
+        } else if (maze[x][y].equals("S")) {
+            return false;
+        }
         return false;
     }
 
     public static void main(String[] args) {
 
 
-
-        if (findS(maze))
+        if (findS(maze)) {
             System.out.println(start);
-
-
+            Point p = new Point(start.getX(),start.getY());
+            if (solve(p)) {
+                System.out.println("Solved!");
+                System.out.println(route);
+            } else
+                System.out.println("No solution!");
+        }
     }
 }
