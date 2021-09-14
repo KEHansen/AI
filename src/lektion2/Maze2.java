@@ -3,24 +3,25 @@ package lektion2;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Maze {
+public class Maze2 {
 
     static Scanner in = new Scanner(System.in);
 
     static Point start;
 
     static ArrayList<Point> route = new ArrayList<>();
+    static ArrayList<Point> solution = new ArrayList<>();
 
     static String[][] maze = {  {"¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤"},
-                                {"¤"," ","¤"," ","¤"," ","¤"," "," "," "," "," ","¤"},
-                                {"¤"," ","¤"," "," "," ","¤"," ","¤","¤","¤"," ","¤"},
-                                {"¤"," "," ","S","¤","¤","¤"," "," "," "," "," ","¤"},
-                                {"¤"," ","¤"," "," "," "," "," ","¤","¤","¤"," ","¤"},
-                                {"¤"," ","¤"," ","¤","¤","¤"," ","¤"," "," "," ","¤"},
-                                {"¤"," ","¤"," ","¤"," "," "," ","¤","¤","¤"," ","¤"},
-                                {"¤"," ","¤"," ","¤","¤","¤"," ","¤"," ","¤"," ","¤"},
-                                {"¤"," "," "," "," "," "," "," "," "," ","¤","G","¤"},
-                                {"¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤"}};
+            {"¤"," ","¤"," ","¤"," ","¤"," "," "," "," "," ","¤"},
+            {"¤"," ","¤"," "," "," ","¤"," ","¤","¤","¤"," ","¤"},
+            {"¤"," "," ","S","¤","¤","¤"," "," "," "," "," ","¤"},
+            {"¤"," ","¤"," "," "," "," "," ","¤","¤","¤"," ","¤"},
+            {"¤"," ","¤"," ","¤","¤","¤"," ","¤"," "," "," ","¤"},
+            {"¤"," ","¤"," ","¤"," "," "," ","¤","¤","¤"," ","¤"},
+            {"¤"," ","¤"," ","¤","¤","¤"," ","¤"," ","¤"," ","¤"},
+            {"¤"," "," "," "," "," "," "," "," "," ","¤","G","¤"},
+            {"¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤","¤"}};
 
     static void printmatrix(String[][] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -58,24 +59,41 @@ public class Maze {
         if (maze[x][y+1].equals(" ") || maze[x][y+1].equals("G")) {
             pos.setY(y + 1);
             route.add(temp);
-            return solve(pos);
-        } else if (maze[x+1][y].equals(" ") || maze[x+1][y].equals("G")) {
+            if (solve(pos)) {
+                solution.add(pos);
+                return true;
+            }
+        }
+        if (maze[x+1][y].equals(" ") || maze[x+1][y].equals("G")) {
             pos.setX(x + 1);
             route.add(temp);
-            return solve(pos);
-        } else if (maze[x][y-1].equals(" ") || maze[x][y-1].equals("G")) {
+            if (solve(pos)) {
+                solution.add(pos);
+                return true;
+            }
+        }
+        if (maze[x][y-1].equals(" ") || maze[x][y-1].equals("G")) {
             pos.setY(y - 1);
             route.add(temp);
-            return solve(pos);
-        } else if (maze[x-1][y].equals(" ") || maze[x-1][y].equals("G")) {
+            if (solve(pos)) {
+                solution.add(pos);
+                return true;
+            }
+        }
+        if (maze[x-1][y].equals(" ") || maze[x-1][y].equals("G")) {
             pos.setX(x - 1);
             route.add(temp);
-            return solve(pos);
-        } else if (!(maze[x][y].equals("S"))) {
+            if (solve(pos)) {
+                solution.add(pos);
+                return true;
+            }
+        }
+        if (!(maze[x][y].equals("S"))) {
             maze[x][y] = "x";
             route.remove(route.size()-1);
             return solve(route.get(route.size() - 1));
-        } else if (maze[x][y].equals("S")) {
+        }
+        if (maze[x][y].equals("S")) {
             return false;
         }
         return false;
@@ -89,7 +107,7 @@ public class Maze {
             Point p = new Point(start.getX(),start.getY());
             if (solve(p)) {
                 System.out.println("Solved!");
-                System.out.println(route);
+                System.out.println(solution);
                 printmatrix(maze);
             } else
                 System.out.println("No solution!");
