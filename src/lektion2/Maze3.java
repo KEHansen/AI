@@ -1,6 +1,7 @@
 package lektion2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Maze3 {
@@ -46,19 +47,25 @@ public class Maze3 {
         return (start != null && goal != null);
     }
 
-    static ArrayList<Point> check(Point p) {
-        double dist = p.distance(goal);
-        double temp;
-        for (int i = 0; i < dir.length; i++) {
-            p.distance(goal);
-        }
-    }
+//    static ArrayList<Point> check(Point p) {
+//        double dist = p.distance(goal);
+//        double temp;
+//        for (int i = 0; i < dir.length; i++) {
+//            p.distance(goal);
+//        }
+//    }
 
     static boolean solve(Point pos) {
         int x = pos.getX();
         int y = pos.getY();
         ArrayList<Point> order = new ArrayList<>();
-
+        //printmatrix(maze);
+        //String n = in.nextLine();
+        if (maze[x][y].equals("G"))
+            return true;
+        if (!(maze[x][y].equals("S") || maze[x][y].equals("G"))) {
+            maze[x][y] = "v";
+        }
         if (maze[x][y + 1].equals(" ") || maze[x][y + 1].equals("G")) {
             order.add(new Point(pos.x, pos.y + 1));
         }
@@ -81,9 +88,11 @@ public class Maze3 {
                 return true;
             }
         } else {
-            for (int i = 1; i < order.size(); i++) {
-                if (order.get(i-1).distance(goal) > order.get(0).distance(goal)) {
-                    order.sort();
+            for (int j = 0; j < 2; j++) {
+                for (int i = 1; i < order.size(); i++) {
+                    if (order.get(i-1).distance(goal) > order.get(i).distance(goal)) {
+                        Collections.swap(order, i-1, i);
+                    }
                 }
             }
             for (Point point : order) {
@@ -93,13 +102,20 @@ public class Maze3 {
                 }
             }
         }
-
         return false;
     }
 
 
     public static void main(String[] args) {
-
+        if (findS(maze)) {
+            Point p = new Point(start.getX(),start.getY());
+            if (solve(p)) {
+                System.out.println();
+                System.out.println("Solved!");
+                printmatrix(maze);
+            } else
+                System.out.println("No solution!");
+        }
     }
 
 }
