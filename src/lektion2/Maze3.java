@@ -10,8 +10,7 @@ public class Maze3 {
 
     static Point start, goal;
 
-    static Point[] dir = {   new Point(0, 1), new Point(1, 0),
-                                    new Point(0, -1), new Point(-1, 0)};
+    static ArrayList<Point> sol = new ArrayList<>();
 
     static String[][] maze = {
             {"¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤"},
@@ -32,6 +31,21 @@ public class Maze3 {
                 System.out.print(arr[i][j] + " ");
             }
             System.out.println();
+        }
+    }
+
+    static void clearMaze() {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[i].length; j++) {
+                if (!(maze[i][j].equals("S") || maze[i][j].equals("G") || maze[i][j].equals("¤")))
+                    maze[i][j] = " ";
+            }
+        }
+    }
+
+    static void showPath() {
+        for (int i = 0; i < sol.size() - 1; i++) {
+            maze[sol.get(i).x][sol.get(i).y] = ".";
         }
     }
 
@@ -84,7 +98,7 @@ public class Maze3 {
 
         if (order.size() == 1) {
             if (solve(order.get(0))){
-                System.out.print(order.get(0));
+                sol.add(order.get(0));
                 return true;
             }
         } else {
@@ -97,7 +111,7 @@ public class Maze3 {
             }
             for (Point point : order) {
                 if (solve(point)) {
-                    System.out.print(point);
+                    sol.add(point);
                     return true;
                 }
             }
@@ -110,11 +124,16 @@ public class Maze3 {
         if (findS(maze)) {
             Point p = new Point(start.getX(),start.getY());
             if (solve(p)) {
-                System.out.println();
+                Collections.reverse(sol);
+                clearMaze();
+                showPath();
+                System.out.println(sol);
                 System.out.println("Solved!");
-                printmatrix(maze);
-            } else
+            } else {
                 System.out.println("No solution!");
+            }
+
+            printmatrix(maze);
         }
     }
 
