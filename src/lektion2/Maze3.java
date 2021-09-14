@@ -2,16 +2,12 @@ package lektion2;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 public class Maze3 {
 
-    static Scanner in = new Scanner(System.in);
-
     static Point start, goal;
 
-    static Point[] dir = {   new Point(0, 1), new Point(1, 0),
-                                    new Point(0, -1), new Point(-1, 0)};
+    static ArrayList<Point> sol = new ArrayList<>();
 
     static String[][] maze = {
             {"¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤", "¤"},
@@ -35,6 +31,21 @@ public class Maze3 {
         }
     }
 
+    static void clearMaze() {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[i].length; j++) {
+                if (!(maze[i][j].equals("S") || maze[i][j].equals("G") || maze[i][j].equals("¤")))
+                    maze[i][j] = " ";
+            }
+        }
+    }
+
+    static void showPath() {
+        for (int i = 0; i < sol.size() - 1; i++) {
+            maze[sol.get(i).x][sol.get(i).y] = ".";
+        }
+    }
+
     static boolean findS(String[][] maze) {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[i].length; j++) {
@@ -47,20 +58,11 @@ public class Maze3 {
         return (start != null && goal != null);
     }
 
-//    static ArrayList<Point> check(Point p) {
-//        double dist = p.distance(goal);
-//        double temp;
-//        for (int i = 0; i < dir.length; i++) {
-//            p.distance(goal);
-//        }
-//    }
-
     static boolean solve(Point pos) {
         int x = pos.getX();
         int y = pos.getY();
         ArrayList<Point> order = new ArrayList<>();
-        //printmatrix(maze);
-        //String n = in.nextLine();
+
         if (maze[x][y].equals("G"))
             return true;
         if (!(maze[x][y].equals("S") || maze[x][y].equals("G"))) {
@@ -84,7 +86,7 @@ public class Maze3 {
 
         if (order.size() == 1) {
             if (solve(order.get(0))){
-                System.out.print(order.get(0));
+                sol.add(order.get(0));
                 return true;
             }
         } else {
@@ -97,7 +99,7 @@ public class Maze3 {
             }
             for (Point point : order) {
                 if (solve(point)) {
-                    System.out.print(point);
+                    sol.add(point);
                     return true;
                 }
             }
@@ -110,11 +112,15 @@ public class Maze3 {
         if (findS(maze)) {
             Point p = new Point(start.getX(),start.getY());
             if (solve(p)) {
-                System.out.println();
+                Collections.reverse(sol);
+                clearMaze();
+                showPath();
+                System.out.println(sol);
                 System.out.println("Solved!");
-                printmatrix(maze);
-            } else
+            } else {
                 System.out.println("No solution!");
+            }
+            printmatrix(maze);
         }
     }
 
