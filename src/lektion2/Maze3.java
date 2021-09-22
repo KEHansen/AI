@@ -2,10 +2,13 @@ package lektion2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Maze3 {
 
     static Point start, goal;
+
+    static Scanner in = new Scanner(System.in);
 
     static ArrayList<Point> sol = new ArrayList<>();
 
@@ -62,6 +65,8 @@ public class Maze3 {
         int x = pos.getX();
         int y = pos.getY();
         ArrayList<Point> order = new ArrayList<>();
+        String n = in.nextLine();
+        printmatrix(maze);
 
         if (maze[x][y].equals("G"))
             return true;
@@ -106,7 +111,6 @@ public class Maze3 {
         }
         return false;
     }
-
 
     public static void main(String[] args) {
         if (findS(maze)) {
